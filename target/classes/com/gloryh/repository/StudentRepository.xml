@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gloryh.repository.StudentRepository">
+    <resultMap id="studentMap" type="com.gloryh.entity.Student">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <association property="classes" javaType="com.gloryh.entity.Classes">
+            <id column="cid" property="id"></id>
+            <result column="cname" property="name"></result>
+        </association>
+    </resultMap>
+    <select id="findById" parameterType="long" resultMap="studentMap">
+        SELECT s.id,s.name,c.id as cid,c.name as cname FROM student s ,classes c WHERE s.id =#{id} AND s.c_id =c.id
+    </select>
+
+
+    <resultMap id="studentMapLazy" type="com.gloryh.entity.Student">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <association property="classes" javaType="com.gloryh.entity.Classes" select="com.gloryh.repository.ClassesRepository.findByIdLazy" column="c_id">
+        </association>
+    </resultMap>
+    <select id="findByIdLazy" parameterType="long" resultMap="studentMapLazy">
+        SELECT * FROM student WHERE id =#{id}
+    </select>
+</mapper>

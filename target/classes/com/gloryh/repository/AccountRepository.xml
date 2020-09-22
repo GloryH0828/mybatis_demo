@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gloryh.repository.AccountRepository">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <!-- 缓存创建之后最后一次访问缓存的时间 至 缓存失效的时间间隔，以秒为单位 -->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!-- 缓存自创建时间起 至 失效的时间间隔，疫苗为单位 -->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!-- 垃圾回收策略，最近最少使用算法 ：LRU -->
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    <insert id="save" parameterType="com.gloryh.entity.Account">
+        INSERT INTO account(username,password,age) VALUES (#{username},#{password},#{age})
+    </insert>
+    <!--<update id="update" parameterType="com.gloryh.entity.Account">
+        UPDATE account SET username = #{username},password = #{password},age = #{age} WHERE id =#{id}
+    </update>-->
+    <update id="update" parameterType="com.gloryh.entity.Account">
+        UPDATE account
+        <set>
+            <if test="username!=null">
+                username = #{username},
+            </if>
+            <if test="password!=null">
+                password = #{password},
+            </if>
+            <if test="age!=0">
+                age = #{age}
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM account WHERE id =#{id}
+    </delete>
+
+    <select id="findAll" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account
+    </select>
+    <select id="findById" parameterType="long" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account WHERE id = #{id}
+    </select>
+    <!--<select id="findByAccount" parameterType="com.gloryh.entity.Account" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account
+        <where>
+            <if test="id!=0">
+                id=#{id}
+            </if>
+            <if test="username!=null">
+                AND username = #{username}
+            </if>
+            <if test="password!=null">
+                AND password = #{password}
+            </if>
+            <if test="age!=0">
+                AND age = #{age}
+            </if>
+        </where>
+    </select>-->
+    <!--<select id="findByAccount" parameterType="com.gloryh.entity.Account" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account
+        <where>
+            <choose>
+                <when test="id!=0">
+                    id = #{id}
+                </when>
+                <when test="username!=null">
+                    username = #{username}
+                </when>
+                <when test="password!=null">
+                    password = #{password}
+                </when>
+                <when test="age!=0">
+                    age = #{age}
+                </when>
+            </choose>
+        </where>
+    </select>-->
+    <select id="findByAccount" parameterType="com.gloryh.entity.Account" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id!=0">
+                id=#{id}
+            </if>
+            <if test="username!=null">
+                AND username = #{username}
+            </if>
+            <if test="password!=null">
+                AND password = #{password}
+            </if>
+            <if test="age!=0">
+                AND age = #{age}
+            </if>
+        </trim>
+    </select>
+    <select id="findByIds" parameterType="com.gloryh.entity.Account" resultType="com.gloryh.entity.Account">
+        SELECT * FROM account
+        <where>
+            <foreach collection="ids" open="id in(" close=")" item="id" separator=",">
+            #{id}
+            </foreach>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gloryh.repository.CustomerRepository">
+    <resultMap id="customerMap" type="com.gloryh.entity.Customer">
+        <id column="cid" property="id"></id>
+        <result column="cname" property="name"></result>
+        <collection property="goods" ofType="com.gloryh.entity.Goods">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </collection>
+    </resultMap>
+    <select id="findById" parameterType="long" resultMap="customerMap">
+        SELECT c.id AS cid,c.name AS cname ,g.id,g.name FROM customer c ,goods g ,customer_goods cg WHERE c.id = #{id} AND cg.c_id=c.id AND cg.g_id=g.id
+    </select>
+</mapper>

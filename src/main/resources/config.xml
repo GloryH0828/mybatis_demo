@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 打印 SQL 语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!-- 开启延迟加载，默认为不开启，value 为 false -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 开启二级缓存，默认为不开启，value 为 false -->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    <!--配置 MyBatis的可运行环境-->
+    <environments default="development">
+        <environment id="development">
+            <!-- 配置JDBC的事务管理 -->
+            <transactionManager type="JDBC"/>
+            <!-- 配置数据源（POOLED） -->
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://localhost:3305/mybatis_demo?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=UTC&amp;allowMultiQueries=true"/>
+                <property name="username" value="admin"/>
+                <property name="password" value="123"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 注册 mapper文件 -->
+    <mappers>
+        <mapper resource="com/gloryh/mapper/AccountMapper.xml"></mapper>
+        <mapper resource="com/gloryh/repository/AccountRepository.xml"></mapper>
+        <mapper resource="com/gloryh/repository/StudentRepository.xml"></mapper>
+        <mapper resource="com/gloryh/repository/ClassesRepository.xml"></mapper>
+        <mapper resource="com/gloryh/repository/CustomerRepository.xml"></mapper>
+    </mappers>
+</configuration>
